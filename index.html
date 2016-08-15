@@ -23,8 +23,9 @@
       // initiate leaflet map
       map = new L.Map('cartodb-map', { 
         center: [32,-117],
-        zoom: zoom: 7
+        zoom: zoom: 2
       })
+	  
 	  L.tileLayer('https://dnv9my2eseobd.cloudfront.net/v3/cartodb.map-4xtxp73f/{z}/{x}/{y}.png', {
         attribution: 'Mapbox <a href="http://mapbox.com/about/maps" target="_blank">Terms &amp; Feedback</a>'
       }).addTo(map);
