@@ -26,8 +26,8 @@
         zoom: 12
       })
 	  
-	  L.tileLayer('https://dnv9my2eseobd.cloudfront.net/v3/cartodb.map-4xtxp73f/{z}/{x}/{y}.png', {
-        attribution: 'Mapbox <a href="http://mapbox.com/about/maps" target="_blank">Terms &amp; Feedback</a>'
+	   L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
       }).addTo(map);
 	  
 	  var layerUrl = 'https://walvis.carto.com/api/v2/viz/47b29da2-62ee-11e6-ad18-0ee66e2c9693/viz.json';
