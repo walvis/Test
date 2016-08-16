@@ -7,7 +7,10 @@
     <meta name="description" content="Test : testing">
 
     <link rel="stylesheet" href="https://cartodb-libs.global.ssl.fastly.net/cartodb.js/v3/3.15/themes/css/cartodb.css" />
+	<link rel="stylesheet" href="javascripts/leaflet-search.css" />
 	<script src="https://cartodb-libs.global.ssl.fastly.net/cartodb.js/v3/3.15/cartodb.js"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?v=3&libraries=places&sensor=false"></script>
+	<script src="javascripts/leaflet-search.js"></script>
 	<!--[if lte IE 8]>
     <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v2/themes/css/cartodb.ie.css" />
 	<![endif]-->
@@ -25,7 +28,7 @@
         center: [32.8,-117],
         zoom: 12
       })
-	  
+	  	  
 	   L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
       }).addTo(map);
@@ -38,7 +41,34 @@
 	  }).on('error', function() {
 	 //log the error
 	 });
-	  
+	 //Search
+	 var geocoder = new google.maps.Geocoder();
+	 function googleGeocoding(text, callResponse)
+	{
+		geocoder.geocode({address: text}, callResponse);
+	}
+	function formatJSON(rawjson)
+	{
+		var json = {},
+			key, loc, disp = [];
+		for(var i in rawjson)
+		{
+			key = rawjson[i].formatted_address;
+			loc = L.latLng( rawjson[i].geometry.location.lat(), rawjson[i].geometry.location.lng() );
+			json[ key ]= loc;	//key,value format
+		}
+		return json;
+	}
+	
+	map.addControl( new L.Control.Search({
+			sourceData: googleGeocoding,
+			formatData: formatJSON,
+			markerLocation: true,
+			autoType: true,
+			autoCollapse: true,
+			minLength: 2
+		}) );
+
     }
   </script>
   </head>
