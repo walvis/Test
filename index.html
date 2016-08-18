@@ -33,14 +33,30 @@
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
       }).addTo(map);
 	  
-	  var layerUrl = 'https://walvis.carto.com/api/v2/viz/47b29da2-62ee-11e6-ad18-0ee66e2c9693/viz.json';
+	  //var layerUrl = 'https://walvis.carto.com/api/v2/viz/47b29da2-62ee-11e6-ad18-0ee66e2c9693/viz.json';
 	  
-	  cartodb.createLayer(map, layerUrl)
-		.addTo(map)
-		.on('done', function(layer) {
-	  }).on('error', function() {
-	 //log the error
-	 });
+	  //cartodb.createLayer(map, layerUrl)
+	  //	.addTo(map)
+	  //	.on('done', function(layer) {
+	  //}).on('error', function() {
+	  //log the error
+	  //});
+	  
+	  // Initialise the FeatureGroup to store editable layers
+		var drawnItems = new L.FeatureGroup();
+		//Add previous data
+		var url = "https://walvis.cartodb.com/api/v2/sql?format=geojson&q=SELECT cartodb_id,the_geom FROM table_4sranch_geocode_3_11_2016_xy";
+		$.getJSON(url, function(data) {
+			geojsonLayer = L.geoJson(data, {
+				onEachFeature: function(feature, layer) {
+					layer.cartodb_id = feature.properties.cartodb_id;
+					drawnItems.addLayer(layer);
+				}
+			});
+			map.addLayer(drawnItems);
+		});
+	 
+	 
 	 //Search
 	 var geocoder = new google.maps.Geocoder();
 	 function googleGeocoding(text, callResponse)
