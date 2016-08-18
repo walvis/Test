@@ -59,8 +59,9 @@
 					layer.cartodb_id = feature.properties.cartodb_id;
 					drawnItems.addLayer(layer);
 				}
+				style: highlightStyle;
 			});
-			style: highlightStyle;
+			
 			map.addLayer(drawnItems);
 		});
 	 
