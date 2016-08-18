@@ -45,7 +45,7 @@
 	  // Initialise the FeatureGroup to store editable layers
 		var drawnItems = new L.FeatureGroup();
 		//Add previous data
-		var url = "https://walvis.cartodb.com/api/v2/sql?format=geojson&q=SELECT cartodb_id,the_geom FROM table_4sranch_geocode_3_11_2016_xy";
+		var url = "https://walvis.carto.com/api/v2/sql?format=geojson&q=SELECT cartodb_id,the_geom FROM table_4sranch_geocode_3_11_2016_xy";
 		$.getJSON(url, function(data) {
 			geojsonLayer = L.geoJson(data, {
 				onEachFeature: function(feature, layer) {
