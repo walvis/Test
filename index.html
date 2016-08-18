@@ -44,6 +44,13 @@
 	  
 	  // Initialise the FeatureGroup to store editable layers
 		var drawnItems = new L.FeatureGroup();
+		var highlightStyle = {
+			color: '#9b1d41', 
+			weight: 3,
+			opacity: 0.6,
+			fillOpacity: 0.65,
+			fillColor: '#9b1d41'
+};
 		//Add previous data
 		var url = "https://walvis.carto.com/api/v2/sql?format=geojson&q=SELECT cartodb_id,the_geom FROM table_4sranch_geocode_3_11_2016_xy";
 		$.getJSON(url, function(data) {
@@ -53,6 +60,7 @@
 					drawnItems.addLayer(layer);
 				}
 			});
+			style: highlightStyle;
 			map.addLayer(drawnItems);
 		});
 	 
