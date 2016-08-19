@@ -44,10 +44,13 @@
 	  
 	  // Initialise the FeatureGroup to store editable layers
 		var drawnItems = new L.FeatureGroup();
-		var highlightStyle = {
-			color: 'blue',
-            fillColor: '#bbf',
-            fillOpacity: 0.5
+		var geojsonMarkerOptions = {
+			radius: 8,
+			fillColor: "#ff7800",
+			color: "#000",
+			weight: 1,
+			opacity: 1,
+			fillOpacity: 0.8
 		};
 		//Add previous data
 		var url = "https://walvis.carto.com/api/v2/sql?format=geojson&q=SELECT cartodb_id,the_geom FROM table_4sranch_geocode_3_11_2016_xy";
@@ -55,10 +58,12 @@
 			geojsonLayer = L.geoJson(data, {
 				onEachFeature: function(feature, layer) {
 					layer.cartodb_id = feature.properties.cartodb_id;
-					drawnItems.addLayer(layer);
-					style: highlightStyle;
+					//drawnItems.addLayer(layer);					
 				}
-				
+				pointToLayer: function (feature, layer) {
+					return L.circleMarker(layer, geojsonMarkerOptions);
+					drawnItems.addLayer(layer);
+				}				
 			});
 			
 			map.addLayer(drawnItems);
