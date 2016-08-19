@@ -58,12 +58,9 @@
 			geojsonLayer = L.geoJson(data, {
 				onEachFeature: function(feature, layer) {
 					layer.cartodb_id = feature.properties.cartodb_id;
-					//drawnItems.addLayer(layer);					
+					drawnItems.addLayer(layer);					
 				}
-				pointToLayer: function (feature, layer) {
-					return L.circleMarker(layer, geojsonMarkerOptions);
-					drawnItems.addLayer(layer);
-				}				
+				style: geojsonMarkerOptions;
 			});
 			
 			map.addLayer(drawnItems);
