@@ -53,7 +53,7 @@
 			fillOpacity: 0.8
 		};
 		//Add previous data
-		var url = "https://walvis.carto.com/api/v2/sql?format=geojson&q=SELECT cartodb_id,the_geom,street_nm,house_number FROM table_4sranch_geocode_3_11_2016_xy";
+		var url = "https://walvis.carto.com/api/v2/sql?format=geojson&q=SELECT cartodb_id,the_geom,street_nm,house_ FROM table_4sranch_geocode_3_11_2016_xy";
 		$.getJSON(url, function(data) {
 			geojsonLayer = L.geoJson(data, {
 				pointToLayer: function (feature, latlng) {
@@ -61,7 +61,7 @@
 				},
 				onEachFeature: function(feature, layer) {
 					layer.cartodb_id = feature.properties.cartodb_id;
-					layer.bindPopup(feature.properties.street_nm," ", feature.properties.street_nm);
+					layer.bindPopup(feature.properties.house_," ", feature.properties.street_nm);
 					drawnItems.addLayer(layer);					
 				}
 				
