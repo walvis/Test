@@ -50,7 +50,7 @@
 			color: "#000",
 			weight: 1,
 			opacity: 1,
-			fillOpacity: 0.4
+			fillOpacity: 0.7
 		};
 		//Add previous data
 		var url = "https://walvis.carto.com/api/v2/sql?format=geojson&q=SELECT cartodb_id,the_geom,street_nm,house_ FROM table_4sranch_geocode_3_11_2016_xy";
@@ -68,6 +68,16 @@
 			});
 			
 			map.addLayer(drawnItems);
+			
+			// Initialise the draw control and pass it the FeatureGroup of editable layers
+			var drawControl = new L.Control.Draw({
+				edit: {
+					featureGroup: drawnItems
+				}
+			});
+
+			map.addControl(drawControl);
+			
 		});
 	 
 	 
