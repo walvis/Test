@@ -101,7 +101,7 @@
 						if (layers.getLayers().length < 1) return;
 						layers.eachLayer(function(layer) {
 							cartodb_ids.push(layer.cartodb_id);
-							geojsons.push("'" + JSON.stringify(layer.toGeoJSON()) + "'");
+							geojsons.push("'" + JSON.stringify(layer.toGeoJSON().geometry) + "'");
 						});
 						break;
 					case "INSERT":
