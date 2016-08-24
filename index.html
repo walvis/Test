@@ -106,7 +106,7 @@
 						break;
 					case "INSERT":
 						cartodb_ids.push(-1);
-						geojsons.push("'" + JSON.stringify(layers.toGeoJSON()) + "'");
+						geojsons.push("'" + JSON.stringify(layers.toGeoJSON().geometry) + "'");
 						break;
 					case "DELETE":
 						layers.eachLayer(function(layer) {
