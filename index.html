@@ -80,6 +80,68 @@
 
 			map.addControl(drawControl);
 			
+			//SQL insert/update/delete
+			
+			map.on('draw:created', function(e) {
+				drawnItems.addLayer(e.layer);
+				persistOnCartoDB("INSERT", e.layer);
+			});
+			map.on('draw:edited', function(e) {
+				persistOnCartoDB("UPDATE", e.layers);
+			});
+			map.on('draw:deleted', function(e) {
+				persistOnCartoDB("DELETE", e.layers);
+			});
+			function persistOnCartoDB(action, layers) {
+				var cartodb_ids = [];
+				var geojsons = [];
+				switch (action) {
+					case "UPDATE":
+						if (layers.getLayers().length < 1) return;
+						layers.eachLayer(function(layer) {
+							cartodb_ids.push(layer.cartodb_id);
+							geojsons.push("'" + JSON.stringify(layer.toGeoJSON()) + "'");
+						});
+						break;
+					case "INSERT":
+						cartodb_ids.push(-1);
+						geojsons.push("'" + JSON.stringify(layers.toGeoJSON()) + "'");
+						break;
+					case "DELETE":
+						layers.eachLayer(function(layer) {
+							cartodb_ids.push(layer.cartodb_id);
+							geojsons.push("''");
+						});
+						break;
+				}
+				var sql = "SELECT table_4sranch_geocode_3_11_2016_xy(ARRAY[";
+				sql += cartodb_ids.join(",");
+				sql += "],ARRAY[";
+				sql += geojsons.join(",");
+				sql += "]);";
+				console.log("persisting... https://walvis.carto.com/api/v2/sql?q=" + sql);
+				$.ajax({
+					type: 'POST',
+					url: 'https://walvis.carto.com/api/v2/sql',
+					crossDomain: true,
+					data: {
+						"q": sql
+					},
+					dataType: 'json',
+					success: function(responseData, textStatus, jqXHR) {
+						console.log("Data saved");
+						if (action == "INSERT")
+							layers.cartodb_id = responseData.rows[0].cartodb_id;
+					},
+					error: function(responseData, textStatus, errorThrown) {
+						console.log("Problem saving the data");
+						console.log(responseData);
+						console.log(textStatus);
+						console.log(errorThrown);
+					}
+				});
+			}
+			
 		});
 	 
 	 
@@ -110,6 +172,7 @@
 			autoCollapse: true,
 			minLength: 2
 		}) );
+	//End Search
 
     }
   </script>
