@@ -48,7 +48,7 @@
 	  // Initialise the FeatureGroup to store editable layers
 		var drawnItems = new L.FeatureGroup();
 		var geojsonMarkerOptions = {
-			radius: 5,
+			radius: 4,
 			fillColor: "#7AB800",
 			color: "#000",
 			weight: 1,
@@ -56,7 +56,7 @@
 			fillOpacity: 0.7
 		};
 		//Add previous data
-		var url = "https://walvis.carto.com/api/v2/sql?format=geojson&q=SELECT cartodb_id,the_geom,std_plus,wm_status FROM mission_ks_parcels";
+		var url = "https://walvis.carto.com/api/v2/sql?format=geojson&q=SELECT * FROM mission_ks_parcels";
 		$.getJSON(url, function(data) {
 			geojsonLayer = L.geoJson(data, {
 				pointToLayer: function (feature, latlng) {
@@ -64,7 +64,7 @@
 				},
 				onEachFeature: function(feature, layer) {
 					layer.cartodb_id = feature.properties.cartodb_id;
-					layer.bindPopup(feature.properties.std_plus + " " + feature.properties.wm_status);
+					layer.bindPopup(feature.properties.std_addr + "<br/>" + feature.properties.wm_status);
 					drawnItems.addLayer(layer);					
 				}
 				
