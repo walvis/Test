@@ -28,8 +28,8 @@
     function init(){
       // initiate leaflet map
       map = new L.Map('cartodb-map', { 
-        center: [32.8,-117],
-        zoom: 12
+        center: [39.02,-94.65],
+        zoom: 14
       })
 	  	  
 	   L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -56,7 +56,7 @@
 			fillOpacity: 0.7
 		};
 		//Add previous data
-		var url = "https://walvis.carto.com/api/v2/sql?format=geojson&q=SELECT cartodb_id,the_geom,street_nm,house_ FROM table_4sranch_geocode_3_11_2016_xy";
+		var url = "https://walvis.carto.com/api/v2/sql?format=geojson&q=SELECT cartodb_id,the_geom,std_plus,wm_status FROM MissionKS_PDA";
 		$.getJSON(url, function(data) {
 			geojsonLayer = L.geoJson(data, {
 				pointToLayer: function (feature, latlng) {
@@ -64,7 +64,7 @@
 				},
 				onEachFeature: function(feature, layer) {
 					layer.cartodb_id = feature.properties.cartodb_id;
-					layer.bindPopup(feature.properties.house_ + " " + feature.properties.street_nm);
+					layer.bindPopup(feature.properties.std_plus + " " + feature.properties.wm_status);
 					drawnItems.addLayer(layer);					
 				}
 				
@@ -81,7 +81,7 @@
 
 			map.addControl(drawControl);
 			
-			//SQL insert/update/delete
+			//SQL insert.update.delete
 			
 			map.on('draw:created', function(e) {
 				drawnItems.addLayer(e.layer);
@@ -115,7 +115,7 @@
 						});
 						break;
 				}
-				var sql = "SELECT walvis_upsert_sranch(ARRAY[";
+				var sql = "SELECT walvis_upsert_mission(ARRAY[";
 				sql += cartodb_ids.join(",");
 				sql += "],ARRAY[";
 				sql += geojsons.join(",");
