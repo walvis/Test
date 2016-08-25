@@ -56,7 +56,7 @@
 			fillOpacity: 0.7
 		};
 		//Add previous data
-		var url = "https://walvis.carto.com/api/v2/sql?format=geojson&q=SELECT cartodb_id,the_geom,std_plus,wm_status FROM MissionKS_PDA";
+		var url = "https://walvis.carto.com/api/v2/sql?format=geojson&q=SELECT cartodb_id,the_geom,std_plus,wm_status FROM mission_ks_parcels";
 		$.getJSON(url, function(data) {
 			geojsonLayer = L.geoJson(data, {
 				pointToLayer: function (feature, latlng) {
