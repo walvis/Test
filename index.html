@@ -28,7 +28,7 @@
     function init(){
       // initiate leaflet map
       map = new L.Map('cartodb-map', { 
-        center: [39.03,-94.65],
+        center: [39.02,-94.65],
         zoom: 15
       })
 	  	  
@@ -48,7 +48,7 @@
 	  // Initialise the FeatureGroup to store editable layers
 		var drawnItems = new L.FeatureGroup();
 		var geojsonMarkerOptions = {
-			radius: 4,
+			radius: 3,
 			fillColor: "#7AB800",
 			color: "#000",
 			weight: 1,
