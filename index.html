@@ -158,7 +158,10 @@
 				of: "#map"
 			},
 			buttons: {
-			"Add to Database": setData,
+			"Add to Database": function() {
+				form[ 0 ].reset();
+				console.log("Dialog closed");
+				}
 			Cancel: function() {
 				dialog.dialog("close");
 				map.removeLayer(drawnItems);
