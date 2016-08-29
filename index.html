@@ -48,12 +48,12 @@
 	  // Initialise the FeatureGroup to store editable layers
 		var drawnItems = new L.FeatureGroup();
 		var geojsonMarkerOptions = {
-			radius: 3,
+			radius: 4,
 			fillColor: "#7AB800",
 			color: "#000",
 			weight: 1,
 			opacity: 1,
-			fillOpacity: 0.7
+			fillOpacity: 0.6
 		};
 		//Add previous data
 		var url = "https://walvis.carto.com/api/v2/sql?format=geojson&q=SELECT * FROM mission_ks_parcels";
@@ -98,6 +98,7 @@
 				var geojsons = [];
 				switch (action) {
 					case "UPDATE":
+						dialog.dialog( "open" );
 						if (layers.getLayers().length < 1) return;
 						layers.eachLayer(function(layer) {
 							cartodb_ids.push(layer.cartodb_id);
@@ -105,6 +106,7 @@
 						});
 						break;
 					case "INSERT":
+						dialog.dialog( "open" );
 						cartodb_ids.push(-1);
 						geojsons.push("'" + JSON.stringify(layers.toGeoJSON().geometry) + "'");
 						break;
@@ -141,10 +143,36 @@
 						console.log(errorThrown);
 					}
 				});
-			}
-			
+			}			
 		});
 	 
+	  // Use the jQuery UI dialog to create a dialog and set options
+			var dialog = $("#dialog").dialog({
+				autoOpen: false,
+				height: 300,
+				width: 350,
+				modal: true,
+			position: {
+				my: "center center",
+				at: "center center",
+				of: "#map"
+			},
+			buttons: {
+			"Add to Database": setData,
+			Cancel: function() {
+				dialog.dialog("close");
+				map.removeLayer(drawnItems);
+				}
+			},
+			close: function() {
+				form[ 0 ].reset();
+				console.log("Dialog closed");
+				}
+			});
+	 // Stops default form submission and ensures that setData or the cancel function run
+			var form = dialog.find("form").on("submit", function(event) {
+				event.preventDefault();
+			});
 	 
 	 //Search
 	 var geocoder = new google.maps.Geocoder();
@@ -181,5 +209,16 @@
 
   <body onload="init()">
   <div id='cartodb-map'></div>
+  <div id="dialog" title="Point Information">   
+  <form>
+    <fieldset>
+      <label for="username">Your Name</label>
+      <input type="text" name="username" id="username" placeholder="Enter your Name" class="text ui-widget-content ui-corner-all">
+      <label for="description">About this Point</label>
+      <input type="text" name="description" id="description" placeholder="Description for this point" class="text ui-widget-content ui-corner-all">
+      <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+    </fieldset>
+  </form>
+</div>
   </body>
 </html>
