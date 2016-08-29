@@ -90,6 +90,7 @@
 				persistOnCartoDB("INSERT", e.layer);
 			});
 			map.on('draw:edited', function(e) {
+				dialog.dialog( "open" );
 				persistOnCartoDB("UPDATE", e.layers);
 			});
 			map.on('draw:deleted', function(e) {
@@ -108,7 +109,7 @@
 						});
 						break;
 					case "INSERT":
-						dialog.dialog( "open" );
+						//dialog.dialog( "open" );
 						cartodb_ids.push(-1);
 						geojsons.push("'" + JSON.stringify(layers.toGeoJSON().geometry) + "'");
 						break;
