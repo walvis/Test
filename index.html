@@ -101,7 +101,7 @@
 				var geojsons = [];
 				switch (action) {
 					case "UPDATE":
-						dialog.dialog( "open" );
+						//dialog.dialog( "open" );
 						if (layers.getLayers().length < 1) return;
 						layers.eachLayer(function(layer) {
 							cartodb_ids.push(layer.cartodb_id);
@@ -109,7 +109,7 @@
 						});
 						break;
 					case "INSERT":
-						//dialog.dialog( "open" );
+						dialog.dialog( "open" );
 						cartodb_ids.push(-1);
 						geojsons.push("'" + JSON.stringify(layers.toGeoJSON().geometry) + "'");
 						break;
