@@ -1,4 +1,4 @@
-DROP FUNCTION IF EXISTS walvis_upsert_mission2(int[], text[]);
+DROP FUNCTION IF EXISTS walvis_upsert_mission2(int[], text[], text[]);
 
 -- Returns a set of op,cartodb_id values where op means:
 --
@@ -8,7 +8,8 @@ DROP FUNCTION IF EXISTS walvis_upsert_mission2(int[], text[]);
 --
 CREATE OR REPLACE FUNCTION walvis_upsert_mission2(
   cartodb_ids integer[],
-  geojsons text[])
+  geojsons text[],
+  wm_status text[])
   RETURNS TABLE(op int, cartodb_id int)
 
 LANGUAGE plpgsql SECURITY DEFINER
@@ -51,4 +52,4 @@ END;
 $$;
 
 --Grant access to the public user
-GRANT EXECUTE ON FUNCTION walvis_upsert_mission2(integer[],text[]) TO publicuser;
+GRANT EXECUTE ON FUNCTION walvis_upsert_mission2(integer[],text[],text[]) TO publicuser;
