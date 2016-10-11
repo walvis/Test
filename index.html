@@ -112,6 +112,7 @@
 						layers.eachLayer(function(layer) {
 							cartodb_ids.push(layer.cartodb_id);
 							geojsons.push("'" + JSON.stringify(layer.toGeoJSON().geometry) + "'");
+							wm_status.push(input.value);
 						});
 						break;
 					case "INSERT":
