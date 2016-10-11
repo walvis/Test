@@ -65,11 +65,11 @@
 					return new L.circleMarker(latlng, geojsonMarkerOptions);
 				},
 				onEachFeature: function(feature, layer) {
-					var input = L.DomUtil.create('input', 'my-input');
+					var input = L.DomUtil.create('input', 'my-input'); 
 					input.value = feature.properties.wm_status;
 					layer.cartodb_id = feature.properties.cartodb_id;
 					//layer.bindPopup(feature.properties.std_addr + "<BR/> " + feature.properties.wm_status);
-					layer.bindPopup(feature.properties.std_addr + "<BR/> " + input);
+					layer.bindPopup(input);
 					drawnItems.addLayer(layer);
 				}
 				
