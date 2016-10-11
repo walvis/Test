@@ -68,7 +68,7 @@
 					var input = L.DomUtil.create('input', 'my-input'); 
 					input.value = feature.properties.wm_status;					
 					L.DomEvent.addListener(input, 'change', function () {
-						feature.properties.name = input.value;
+						feature.properties.wm_status = input.value;
 					});
 					layer.cartodb_id = feature.properties.cartodb_id;
 					//layer.bindPopup(feature.properties.std_addr + "<BR/> " + feature.properties.wm_status);
@@ -126,7 +126,7 @@
 						});
 						break;
 				}
-				var sql = "SELECT walvis_upsert_mission(ARRAY[";
+				var sql = "SELECT walvis_upsert_mission2(ARRAY[";
 				sql += cartodb_ids.join(",");
 				sql += "],ARRAY[";
 				sql += geojsons.join(",");
