@@ -26,7 +26,8 @@ FOR i in 1 .. array_upper(geojsons, 1)
 LOOP
   IF i > 1 THEN sql := sql || ','; END IF;
   sql :=sql || '('||cartodb_ids[i]||','
-            || 'ST_SetSRID(ST_GeomFromGeoJSON(NULLIF('''|| geojsons[i] ||''','''')),4326))';
+            || 'ST_SetSRID(ST_GeomFromGeoJSON(NULLIF('''|| geojsons[i] ||''','''')),4326),'
+			|| ||wm_status[i]||')';
 END LOOP;
 
 sql := sql || '), do_update AS ('
