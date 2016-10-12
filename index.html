@@ -71,6 +71,7 @@
 						feature.properties.wm_status = input.value;
 					});
 					layer.cartodb_id = feature.properties.cartodb_id;
+					layer.wm_status = feature.properties.wm_status
 					//layer.bindPopup(feature.properties.std_addr + "<BR/> " + feature.properties.wm_status);
 					layer.bindPopup(input);
 					drawnItems.addLayer(layer);
