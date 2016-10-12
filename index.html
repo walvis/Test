@@ -107,6 +107,7 @@
 				var cartodb_ids = [];
 				var geojsons = [];
 				var wm_status = [];
+				console.log("sql action= " + action);
 				switch (action) {
 					case "UPDATE":
 						//dialog.dialog( "open" );
@@ -115,7 +116,7 @@
 							cartodb_ids.push(layer.cartodb_id);
 							geojsons.push("'" + JSON.stringify(layer.toGeoJSON().geometry) + "'");
 							wm_status.push("'" + layer.wm_status + "'");
-							console.log("layer.wm_status " + layer.wm_status);
+							console.log("layer.wm_status= " + layer.wm_status);
 						});
 						break;
 					case "INSERT":
