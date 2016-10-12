@@ -120,6 +120,7 @@
 						//dialog.dialog( "open" );
 						cartodb_ids.push(-1);
 						geojsons.push("'" + JSON.stringify(layers.toGeoJSON().geometry) + "'");
+						wm_status.push(layer.wm_status);
 						break;
 					case "DELETE":
 						layers.eachLayer(function(layer) {
@@ -132,6 +133,7 @@
 				sql += cartodb_ids.join(",");
 				sql += "],ARRAY[";
 				sql += geojsons.join(",");
+				sql += wm_status.join(",");
 				sql += "]);";
 				console.log("persisting... https://walvis.carto.com/api/v2/sql?q=" + sql);
 				$.ajax({
