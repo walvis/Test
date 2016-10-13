@@ -9,7 +9,7 @@ DROP FUNCTION IF EXISTS walvis_upsert_mission2(int[], text[], text[]);
 CREATE OR REPLACE FUNCTION walvis_upsert_mission2(
   cartodb_ids integer[],
   geojsons text[],
-  wm_status text[])
+  wm_statuss text[])
   RETURNS TABLE(op int, cartodb_id int)
 
 LANGUAGE plpgsql SECURITY DEFINER
@@ -27,7 +27,7 @@ LOOP
   IF i > 1 THEN sql := sql || ','; END IF;
   sql :=sql || '('||cartodb_ids[i]||','
             || 'ST_SetSRID(ST_GeomFromGeoJSON(NULLIF('''|| geojsons[i] ||''','''')),4326)),'
-			|| '''wm_status[i]''';
+			|| '''wm_statuss[i]''';
 END LOOP;
 
 sql := sql || '), do_update AS ('
