@@ -117,7 +117,7 @@
 						layers.eachLayer(function(layer) {
 							cartodb_ids.push(layer.cartodb_id);
 							geojsons.push("'" + JSON.stringify(layer.toGeoJSON().geometry) + "'");
-							wm_status.push(layer.wm_status);
+							wm_status.push("'" + layer.wm_status + "'");
 							console.log("layer.wm_status= " + layer.wm_status);
 						});
 						break;
@@ -158,6 +158,7 @@
 					},
 					error: function(responseData, textStatus, errorThrown) {
 						console.log("Problem saving the data");
+						console.log(sql);
 						console.log(responseData);
 						console.log(textStatus);
 						console.log(errorThrown);
