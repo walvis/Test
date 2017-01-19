@@ -129,7 +129,7 @@
 						cartodb_ids.push(-1);
 						geojsons.push("'" + JSON.stringify(layers.toGeoJSON().geometry) + "'");
 						wm_status.push(layers.wm_status);
-						console.log("layer.wm_status= " + layers.wm_status)
+						//console.log("layer.wm_status= " + layers.wm_status)
 						break;
 					case "DELETE":
 						layers.eachLayer(function(layer) {
