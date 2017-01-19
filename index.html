@@ -110,7 +110,7 @@
 				var geojsons = [];
 				var wm_status = [];
 				console.log("sql action= " + action);
-				console.log("layers.wm_status = " + layers.wm_status );
+				//console.log("layers.wm_status = " + layers.wm_status );
 				switch (action) {
 					case "UPDATE":
 						//dialog.dialog( "open" );
@@ -120,7 +120,7 @@
 							console.log("layer.wm_status= " + layer.wm_status);
 							cartodb_ids.push(layer.cartodb_id);
 							geojsons.push("'" + JSON.stringify(layer.toGeoJSON().geometry) + "'");
-							wm_status.push("'" + layer.wm_status + "'");
+							wm_status.push(""" + layer.wm_status + """);
 							
 						});
 						break;
