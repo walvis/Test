@@ -120,7 +120,7 @@
 							console.log("layer.wm_status= " + layer.wm_status);
 							cartodb_ids.push(layer.cartodb_id);
 							geojsons.push("'" + JSON.stringify(layer.toGeoJSON().geometry) + "'");
-							wm_status.push("'" + layer.wm_status + "'");
+							wm_status.push(layer.wm_status);
 							
 						});
 						break;
