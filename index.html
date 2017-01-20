@@ -120,7 +120,7 @@
 							console.log("layer.wm_status= " + layer.wm_status);
 							cartodb_ids.push(layer.cartodb_id);
 							geojsons.push("'" + JSON.stringify(layer.toGeoJSON().geometry) + "'");
-							//wm_status.push(JSON.stringify(layer.wm_status));
+							wm_status.push(layer.wm_status);
 							
 						});
 						break;
@@ -139,12 +139,12 @@
 						});
 						break;
 				}
-				var sql = "SELECT walvis_upsert_mission(ARRAY[";
+				var sql = "SELECT walvis_upsert_mission2(ARRAY[";
 				sql += cartodb_ids.join(",");
 				sql += "],ARRAY[";
 				sql += geojsons.join(",");
-				//sql += "],ARRAY[";
-				//sql += wm_status.join(",");
+				sql += "],ARRAY[";
+				sql += wm_status.join(",");
 				sql += "]);";
 				console.log("persisting... https://walvis.carto.com/api/v2/sql?q=" + sql);
 				$.ajax({
