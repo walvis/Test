@@ -143,8 +143,8 @@
 				sql += cartodb_ids.join(",");
 				sql += "],ARRAY[";
 				sql += geojsons.join(",");
-				sql += "],ARRAY[";
-				sql += wm_status.join(",");
+				//sql += "],ARRAY[";
+				//sql += wm_status.join(",");
 				sql += "]);";
 				console.log("persisting... https://walvis.carto.com/api/v2/sql?q=" + sql);
 				$.ajax({
