@@ -108,7 +108,7 @@
 			function persistOnCartoDB(action, layers) {
 				var cartodb_ids = [];
 				var geojsons = [];
-				var wm_status = [];
+				var wm_status2 = [];
 				console.log("sql action= " + action);
 				//console.log("layers.wm_status = " + layers.wm_status );
 				switch (action) {
@@ -120,7 +120,7 @@
 							console.log("layer.wm_status= " + layer.wm_status);
 							cartodb_ids.push(layer.cartodb_id);
 							geojsons.push("'" + JSON.stringify(layer.toGeoJSON().geometry) + "'");
-							wm_status.push("'" + layer.wm_status + "'");
+							wm_status2.push("'" + layer.wm_status + "'");
 							
 						});
 						break;
@@ -128,14 +128,14 @@
 						//dialog.dialog( "open" );
 						cartodb_ids.push(-1);
 						geojsons.push("'" + JSON.stringify(layers.toGeoJSON().geometry) + "'");
-						wm_status.push(layers.wm_status);
+						wm_status2.push(layers.wm_status);
 						console.log("layer.wm_status= " + layers.wm_status)
 						break;
 					case "DELETE":
 						layers.eachLayer(function(layer) {
 							cartodb_ids.push(layer.cartodb_id);
 							geojsons.push("''");
-							wm_status.push("''");
+							wm_status2.push("''");
 						});
 						break;
 				}
