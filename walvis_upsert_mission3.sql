@@ -53,4 +53,4 @@ END;
 $$;
 
 --Grant access to the public user
-GRANT EXECUTE ON FUNCTION walvis_upsert_mission2(integer[],text[],text[]) TO publicuser;
+GRANT EXECUTE ON FUNCTION walvis_upsert_mission3(integer[],text[],integer[]) TO publicuser;
