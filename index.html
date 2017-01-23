@@ -66,14 +66,19 @@
 				},
 				onEachFeature: function(feature, layer) {
 					var input = L.DomUtil.create('input', 'my-input'); 
-					input.value = feature.properties.wm_status;					
+					//input.value = feature.properties.wm_status;
+					input.value = feature.properties.status;					
 					L.DomEvent.addListener(input, 'change', function () {
-						feature.properties.wm_status = input.value;
-						console.log("change status= " + feature.properties.wm_status);
-						layer.wm_status = feature.properties.wm_status
+						//feature.properties.wm_status = input.value;
+						feature.properties.status = input.value;
+						//console.log("change status= " + feature.properties.wm_status);
+						console.log("change status= " + feature.properties.status);
+						//layer.wm_status = feature.properties.wm_status
+						layer.status = feature.properties.status
 					});
 					layer.cartodb_id = feature.properties.cartodb_id;
-					layer.wm_status = feature.properties.wm_status;
+					//layer.wm_status = feature.properties.wm_status;
+					layer.status = feature.properties.status;
 					//layer.bindPopup(feature.properties.std_addr + "<BR/> " + feature.properties.wm_status);
 					layer.bindPopup(input);
 					drawnItems.addLayer(layer);
@@ -117,10 +122,12 @@
 						if (layers.getLayers().length < 1) return;
 						layers.eachLayer(function(layer) {
 							console.log("layer.cartodb_id= " + layer.cartodb_id);
-							console.log("layer.wm_status= " + layer.wm_status);
+							//console.log("layer.wm_status= " + layer.wm_status);
+							console.log("layer.status= " + layer.status);
 							cartodb_ids.push(layer.cartodb_id);
 							geojsons.push("'" + JSON.stringify(layer.toGeoJSON().geometry) + "'");
-							wm_status2.push("'" + layer.wm_status + "'");
+							//wm_status2.push("'" + layer.wm_status + "'");
+							wm_status2.push(layer.status);
 							
 						});
 						break;
@@ -128,8 +135,10 @@
 						//dialog.dialog( "open" );
 						cartodb_ids.push(-1);
 						geojsons.push("'" + JSON.stringify(layers.toGeoJSON().geometry) + "'");
-						wm_status2.push(layers.wm_status);
-						console.log("layer.wm_status= " + layers.wm_status)
+						//wm_status2.push(layers.wm_status);
+						wm_status2.push(layers.status);
+						//console.log("layer.wm_status= " + layers.wm_status)
+						console.log("layer.status= " + layers.status)
 						break;
 					case "DELETE":
 						layers.eachLayer(function(layer) {
@@ -139,7 +148,7 @@
 						});
 						break;
 				}
-				var sql = "SELECT walvis_upsert_mission2(ARRAY[";
+				var sql = "SELECT walvis_upsert_mission3(ARRAY[";
 				sql += cartodb_ids.join(",");
 				sql += "],ARRAY[";
 				sql += geojsons.join(",");
