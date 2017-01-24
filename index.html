@@ -105,6 +105,7 @@
 			});
 			map.on('draw:edited', function(e) {
 				//dialog.dialog( "open" );
+				console.log("Figuring out what 'e' is = " + e.layer);
 				persistOnCartoDB("UPDATE", e.layers);
 			});
 			map.on('draw:deleted', function(e) {
