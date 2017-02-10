@@ -33,7 +33,7 @@
     function init(){
       // initiate leaflet map
       map = new L.Map('cartodb-map', { 
-        center: [39.02,-94.65],
+        center: [36.356,-121.579],
         zoom: 15
       })
 	  	  
@@ -61,7 +61,7 @@
 			fillOpacity: 0.6
 		};
 		//Add previous data
-		var url = "https://walvis.carto.com/api/v2/sql?format=geojson&q=SELECT * FROM mission_ks_parcels";
+		var url = "https://walvis.carto.com/api/v2/sql?format=geojson&q=SELECT * FROM Monterey";
 		$.getJSON(url, function(data) {
 			geojsonLayer = L.geoJson(data, {
 				pointToLayer: function (feature, latlng) {
