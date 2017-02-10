@@ -61,7 +61,7 @@
 			fillOpacity: 0.6
 		};
 		//Add previous data
-		var url = "https://walvis.carto.com/api/v2/sql?format=geojson&q=SELECT * FROM Monterey";
+		var url = "https://walvis.carto.com/api/v2/sql?format=geojson&q=SELECT * FROM montereyca_xy";
 		$.getJSON(url, function(data) {
 			geojsonLayer = L.geoJson(data, {
 				pointToLayer: function (feature, latlng) {
