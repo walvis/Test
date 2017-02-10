@@ -99,6 +99,12 @@
 			});
 
 			map.addControl(drawControl);
+			var lc = L.control.locate({
+			position: 'topright',
+			strings: {
+			title: "Show me where I am, yo!"
+					}
+			}).addTo(map);
 			
 			//SQL insert.update.delete
 			
@@ -239,7 +245,7 @@
 			minLength: 2
 		}) );
 	//End Search
-	L.control.locate().addTo(map);
+	
 
     }
   </script>
