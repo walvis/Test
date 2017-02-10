@@ -70,7 +70,7 @@
 				onEachFeature: function(feature, layer) {
 					var input = L.DomUtil.create('input', 'my-input'); 
 					//input.value = feature.properties.wm_status;
-					input.value = feature.properties.status;					
+					input.value = feature.properties.std_addr;					
 					L.DomEvent.addListener(input, 'change', function () {
 						//feature.properties.wm_status = input.value;
 						feature.properties.status = input.value;
