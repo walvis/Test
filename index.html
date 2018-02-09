@@ -76,9 +76,10 @@
 						feature.properties.status = input.value;
 						//console.log("change status= " + feature.properties.wm_status);
 						console.log("change status= " + feature.properties.status);
-						input.value = feature.properties.status
+						//input.value = feature.properties.status
 						//layer.wm_status = feature.properties.wm_status
-						//layer.status = feature.properties.std_addr
+						layer.status = feature.properties.status;
+						console.log("layer.status= " + layer.status);
 					});
 					layer.cartodb_id = feature.properties.cartodb_id;
 					//layer.wm_status = feature.properties.wm_status;
@@ -126,7 +127,7 @@
 				var geojsons = [];
 				var wm_status2 = [];
 				console.log("sql action= " + action);
-				console.log("layers.wm_status = " + layers.wm_status );
+				//console.log("layers.wm_status = " + layers.wm_status );
 				switch (action) {
 					case "UPDATE":
 						//dialog.dialog( "open" );
