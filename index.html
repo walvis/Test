@@ -70,7 +70,7 @@
 				onEachFeature: function(feature, layer) {
 					var input = L.DomUtil.create('input', 'my-input'); 
 					//input.value = feature.properties.wm_status;
-					input.value = feature.properties.wm_status;					
+					input.value = feature.properties.status;					
 					L.DomEvent.addListener(input, 'change', function () {
 						//feature.properties.wm_status = input.value;
 						feature.properties.status = input.value;
@@ -115,7 +115,7 @@
 			});
 			map.on('draw:edited', function(e) {
 				//dialog.dialog( "open" );
-				console.log("Figuring out what 'e' is = " + e.layer);
+				console.log("Figuring out what 'e' is = " + e.layers);
 				persistOnCartoDB("UPDATE", e.layers);
 			});
 			map.on('draw:deleted', function(e) {
