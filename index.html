@@ -137,7 +137,7 @@
 							console.log("layer.wm_status= " + layer.wm_status);
 							console.log("layer.status= " + layer.status);
 							cartodb_ids.push(layer.cartodb_id);
-							geojsons.push("'" + JSON.stringify(layer.toGeoJSON().geometry) + "'");
+							//geojsons.push("'" + JSON.stringify(layer.toGeoJSON().geometry) + "'");
 							//wm_status2.push("'" + layer.wm_status + "'");
 							wm_status2.push(layer.status);
 							
@@ -160,10 +160,8 @@
 						});
 						break;
 				}
-				var sql = "SELECT walvis_upsert_mission3(ARRAY[";
+				var sql = "SELECT walvis_upsert_mission4(ARRAY[";
 				sql += cartodb_ids.join(",");
-				sql += "],ARRAY[";
-				sql += geojsons.join(",");
 				sql += "],ARRAY[";
 				sql += wm_status2.join(",");
 				sql += "]);";
