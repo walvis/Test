@@ -6,7 +6,7 @@ DROP FUNCTION IF EXISTS walvis_upsert_mission4(int[], int[]);
 --  updated: 0
 --  inserted: 1
 --
-CREATE OR REPLACE FUNCTION walvis_upsert_mission3(
+CREATE OR REPLACE FUNCTION walvis_upsert_mission4(
   cartodb_ids integer[],
   status integer[])
   RETURNS TABLE(op int, cartodb_id int)
