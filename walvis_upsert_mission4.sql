@@ -1,4 +1,4 @@
-DROP FUNCTION IF EXISTS walvis_upsert_mission3(int[], int[]);
+DROP FUNCTION IF EXISTS walvis_upsert_mission4(int[], int[]);
 
 -- Returns a set of op,cartodb_id values where op means:
 --
