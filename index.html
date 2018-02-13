@@ -131,12 +131,12 @@
 				//console.log("layers.wm_status = " + layers.wm_status );
 				//dialog.dialog( "open" );
 				//if (layers.getLayers().length < 1) return;
-				layers.eachLayer(function(layer) {
+				//layers.eachLayer(function(layer) {
 				console.log("layer.cartodb_id= " + layer.cartodb_id);
 				console.log("layer.status= " + layer.status);
 				cartodb_ids.push(layer.cartodb_id);
 				wm_status2.push(layer.status);
-				});
+				//});
 						
 				var sql = "SELECT walvis_upsert_mission4(ARRAY[";
 				sql += cartodb_ids.join(",");
