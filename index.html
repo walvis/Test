@@ -70,6 +70,7 @@
 				onEachFeature: function(feature, layer) {
 					var input = L.DomUtil.create('input', 'my-input'); 
 					//input.value = feature.properties.wm_status;
+					var inputHTML = '<input type="text" name="input" class="my-input" value= ""/>
 					input.value = feature.properties.status;					
 					L.DomEvent.addListener(input, 'change', function () {
 						//feature.properties.wm_status = input.value;
@@ -85,8 +86,9 @@
 					layer.cartodb_id = feature.properties.cartodb_id;
 					//layer.wm_status = feature.properties.wm_status;
 					//layer.status = feature.properties.std_addr;
-					//layer.bindPopup(feature.properties.std_addr + "<BR/> " + feature.properties.wm_status);
-					layer.bindPopup(input);
+					//layer.bindPopup(feature.properties.std_addr + "<BR/>" + feature.properties.wm_status);
+					//var inputHTML = '<input type="text" class="my-input" value= ""/>';
+					layer.bindPopup(feature.properties.std_addr + "<BR/>" + inputHTML);
 					drawnItems.addLayer(layer);
 				}
 				
