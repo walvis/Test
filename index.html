@@ -80,6 +80,7 @@
 						//layer.wm_status = feature.properties.wm_status
 						layer.status = feature.properties.status;
 						console.log("layer.status= " + layer.status);
+						updateCartoDB(layers);
 					});
 					layer.cartodb_id = feature.properties.cartodb_id;
 					//layer.wm_status = feature.properties.wm_status;
@@ -122,6 +123,48 @@
 			map.on('draw:deleted', function(e) {
 				persistOnCartoDB("DELETE", e.layers);
 			});
+			
+			function updateCartoDB(layers) {
+				var cartodb_ids = [];
+				//var geojsons = [];
+				var wm_status2 = [];
+				//console.log("layers.wm_status = " + layers.wm_status );
+				//dialog.dialog( "open" );
+				//if (layers.getLayers().length < 1) return;
+				layers.eachLayer(function(layer) {
+				console.log("layer.cartodb_id= " + layer.cartodb_id);
+				console.log("layer.status= " + layer.status);
+				cartodb_ids.push(layer.cartodb_id);
+				wm_status2.push(layer.status);
+				});
+						
+				var sql = "SELECT walvis_upsert_mission4(ARRAY[";
+				sql += cartodb_ids.join(",");
+				sql += "],ARRAY[";
+				sql += wm_status2.join(",");
+				sql += "]);";
+				console.log("persisting... https://walvis.carto.com/api/v2/sql?q=" + sql);
+				$.ajax({
+					type: 'POST',
+					url: 'https://walvis.carto.com/api/v2/sql',
+					crossDomain: true,
+					data: {
+						"q": sql
+					},
+					dataType: 'json',
+					success: function(responseData, textStatus, jqXHR) {
+						console.log("Data saved");
+					},
+					error: function(responseData, textStatus, errorThrown) {
+						console.log("Problem saving the data");
+						console.log(sql);
+						console.log(responseData);
+						console.log(textStatus);
+						console.log(errorThrown);
+					}
+				});
+			}
+			
 			function persistOnCartoDB(action, layers) {
 				var cartodb_ids = [];
 				var geojsons = [];
