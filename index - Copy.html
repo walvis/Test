@@ -99,7 +99,35 @@
 			
 			map.addLayer(drawnItems);
 			
+			// Initialise the draw control and pass it the FeatureGroup of editable layers
+			var drawControl = new L.Control.Draw({
+				edit: {
+					featureGroup: drawnItems
+				}
+			});
+
+			map.addControl(drawControl);
+			var lc = L.control.locate({
+			position: 'topright',
+			strings: {
+			title: "Show me where I am, yo!"
+					}
+			}).addTo(map);
 			
+			//SQL insert.update.delete
+			
+			map.on('draw:created', function(e) {
+				drawnItems.addLayer(e.layer);
+				persistOnCartoDB("INSERT", e.layer);
+			});
+			map.on('draw:edited', function(e) {
+				//dialog.dialog( "open" );
+				console.log("Figuring out what 'e' is = " + e.layers);
+				persistOnCartoDB("UPDATE", e.layers);
+			});
+			map.on('draw:deleted', function(e) {
+				persistOnCartoDB("DELETE", e.layers);
+			});
 			
 			function updateCartoDB(layer) {
 				var cartodb_ids = [];
@@ -142,7 +170,72 @@
 				});
 			}
 			
-			
+			function persistOnCartoDB(action, layers) {
+				var cartodb_ids = [];
+				var geojsons = [];
+				var wm_status2 = [];
+				console.log("sql action= " + action);
+				//console.log("layers.wm_status = " + layers.wm_status );
+				switch (action) {
+					case "UPDATE":
+						//dialog.dialog( "open" );
+						//if (layers.getLayers().length < 1) return;
+						layers.eachLayer(function(layer) {
+							console.log("layer.cartodb_id= " + layer.cartodb_id);
+							console.log("layer.wm_status= " + layer.wm_status);
+							console.log("layer.status= " + layer.status);
+							cartodb_ids.push(layer.cartodb_id);
+							//geojsons.push("'" + JSON.stringify(layer.toGeoJSON().geometry) + "'");
+							//wm_status2.push("'" + layer.wm_status + "'");
+							wm_status2.push(layer.status);
+							
+						});
+						break;
+					case "INSERT":
+						//dialog.dialog( "open" );
+						cartodb_ids.push(-1);
+						geojsons.push("'" + JSON.stringify(layers.toGeoJSON().geometry) + "'");
+						//wm_status2.push(layers.wm_status);
+						wm_status2.push(layers.status);
+						//console.log("layer.wm_status= " + layers.wm_status)
+						console.log("layer.status= " + layers.status)
+						break;
+					case "DELETE":
+						layers.eachLayer(function(layer) {
+							cartodb_ids.push(layer.cartodb_id);
+							geojsons.push("''");
+							wm_status2.push("''");
+						});
+						break;
+				}
+				var sql = "SELECT walvis_upsert_mission4(ARRAY[";
+				sql += cartodb_ids.join(",");
+				sql += "],ARRAY[";
+				sql += wm_status2.join(",");
+				sql += "]);";
+				console.log("persisting... https://walvis.carto.com/api/v2/sql?q=" + sql);
+				$.ajax({
+					type: 'POST',
+					url: 'https://walvis.carto.com/api/v2/sql',
+					crossDomain: true,
+					data: {
+						"q": sql
+					},
+					dataType: 'json',
+					success: function(responseData, textStatus, jqXHR) {
+						console.log("Data saved");
+						if (action == "INSERT")
+							layers.cartodb_id = responseData.rows[0].cartodb_id;
+					},
+					error: function(responseData, textStatus, errorThrown) {
+						console.log("Problem saving the data");
+						console.log(sql);
+						console.log(responseData);
+						console.log(textStatus);
+						console.log(errorThrown);
+					}
+				});
+			}			
 		});
 	 
 	  // Use the jQuery UI dialog to create a dialog and set options
