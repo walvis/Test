@@ -88,7 +88,7 @@
 					//layer.status = feature.properties.std_addr;
 					//layer.bindPopup(feature.properties.std_addr + "<BR/>" + feature.properties.wm_status);
 					var popupContent = document.createElement('div');
-					popupContent.innerHTML = "<b>Address:</b> " + feature.properties.std_addr + "<BR/>" + "City: " + feature.properties.std_city + "<BR/>" + "Zip: " + feature.properties.std_zip + "<BR/>" + "Status: ";
+					popupContent.innerHTML = "<b>Address:</b> " + feature.properties.std_addr + "<BR/>" + "<b>City:</b> " + feature.properties.std_city + "<BR/>" + "<b>Zip:</b> " + feature.properties.std_zip + "<BR/>" + "<b>Status:</b> ";
 					popupContent.appendChild(input);
 					layer.bindPopup(popupContent);
 					//layer.bindPopup("Address: " + feature.properties.std_addr + "<BR/>" + "Status: " + feature.properties.status + "<BR/>" + input);
