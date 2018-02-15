@@ -21,11 +21,11 @@ BEGIN
 sql := 'WITH n(cartodb_id,wm_status) AS (VALUES ';
 
 --Iterate over the values
-FOR i in 1 .. array_upper(cartodb_ids, 1)
+FOR i in 1 .. array_upper(status, 1)
 LOOP
   IF i > 1 THEN sql := sql || ','; END IF;
   sql :=sql || '('||cartodb_ids[i]||','
-			|| status[i]||')';
+			|| CAST (status[i] As text)||')';
 END LOOP;
 
 sql := sql || '), do_update AS ('
