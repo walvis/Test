@@ -18,7 +18,7 @@ DECLARE
 sql text;
 BEGIN
 
-sql := 'WITH n(cartodb_id,status) AS (VALUES ';
+sql := 'WITH n(cartodb_id,wm_status) AS (VALUES ';
 
 --Iterate over the values
 FOR i in 1 .. array_upper(cartodb_ids, 1)
@@ -30,12 +30,12 @@ END LOOP;
 
 sql := sql || '), do_update AS ('
       || 'UPDATE mission_ks_parcels p '
-      || 'SET status=n.wm_status FROM n WHERE p.cartodb_id = n.cartodb_id '
+      || 'SET wm_status=n.wm_status FROM n WHERE p.cartodb_id = n.cartodb_id '
       || 'AND n.wm_status IS NOT NULL '
       || 'RETURNING p.cartodb_id ), do_delete AS ('
       || 'DELETE FROM mission_ks_parcels p WHERE p.cartodb_id IN ('
       || 'SELECT n.cartodb_id FROM n WHERE cartodb_id >= 0) RETURNING p.cartodb_id ), do_insert AS ('
-      || 'INSERT INTO mission_ks_parcels (status)'
+      || 'INSERT INTO mission_ks_parcels (wm_status)'
       || 'SELECT n.wm_status FROM n WHERE n.cartodb_id < 0 AND '
       || ' n.wm_status IS NOT NULL RETURNING cartodb_id ) '
       || 'SELECT 0,cartodb_id FROM do_update UNION ALL '
