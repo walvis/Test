@@ -8,7 +8,7 @@ DROP FUNCTION IF EXISTS walvis_upsert_mission5(int[], text[]);
 --
 CREATE OR REPLACE FUNCTION walvis_upsert_mission5(
   cartodb_ids integer[],
-  wm_status text[])
+  status text[])
   RETURNS TABLE(op int, cartodb_id int)
 
 LANGUAGE plpgsql SECURITY DEFINER
@@ -25,7 +25,7 @@ FOR i in 1 .. array_upper(cartodb_ids, 1)
 LOOP
   IF i > 1 THEN sql := sql || ','; END IF;
   sql :=sql || '('||cartodb_ids[i]||','
-			|| wm_status[i]||')';
+			|| status[i]||')';
 END LOOP;
 
 sql := sql || '), do_update AS ('
