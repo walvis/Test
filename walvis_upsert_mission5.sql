@@ -25,7 +25,7 @@ FOR i in 1 .. array_upper(status, 1)
 LOOP
   IF i > 1 THEN sql := sql || ','; END IF;
   sql :=sql || '('||cartodb_ids[i]||','
-			|| '''status[i]'''||')';
+			||''''|| status[i]||''''||')';
 END LOOP;
 
 sql := sql || '), do_update AS ('
