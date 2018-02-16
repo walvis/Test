@@ -41,16 +41,7 @@
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
       }).addTo(map);
 	  
-	  //var layerUrl = 'https://walvis.carto.com/api/v2/viz/47b29da2-62ee-11e6-ad18-0ee66e2c9693/viz.json';
-	  
-	  //cartodb.createLayer(map, layerUrl)
-	  //	.addTo(map)
-	  //	.on('done', function(layer) {
-	  //}).on('error', function() {
-	  //log the error
-	  //});
-	  
-	  // Initialise the FeatureGroup to store editable layers
+	   // Initialize the FeatureGroup to store editable layers
 		var drawnItems = new L.FeatureGroup();
 		var geojsonMarkerOptions = {
 			radius: 5,
@@ -60,7 +51,7 @@
 			opacity: 1,
 			fillOpacity: 0.6
 		};
-		//Add previous data
+		//Add data
 		var url = "https://walvis.carto.com/api/v2/sql?format=geojson&q=SELECT * FROM mission_ks_parcels";
 		$.getJSON(url, function(data) {
 			geojsonLayer = L.geoJson(data, {
@@ -84,14 +75,10 @@
 						updateCartoDB(layer);
 					});
 					layer.cartodb_id = feature.properties.cartodb_id;
-					//layer.wm_status = feature.properties.wm_status;
-					//layer.status = feature.properties.std_addr;
-					//layer.bindPopup(feature.properties.std_addr + "<BR/>" + feature.properties.wm_status);
 					var popupContent = document.createElement('div');
 					popupContent.innerHTML = "<b>Address:</b> " + feature.properties.std_addr + "<BR/>" + "<b>City:</b> " + feature.properties.std_city + "<BR/>" + "<b>Zip:</b> " + feature.properties.std_zip + "<BR/>" + "<b>Status:</b> ";
 					popupContent.appendChild(input);
 					layer.bindPopup(popupContent);
-					//layer.bindPopup("Address: " + feature.properties.std_addr + "<BR/>" + "Status: " + feature.properties.status + "<BR/>" + input);
 					drawnItems.addLayer(layer);
 				}
 				
@@ -207,7 +194,11 @@
   </head>
 
   <body onload="init()">
-  <div id='cartodb-map'></div>
+  <div id='cartodb-map'>
+	<div class="leaflet-topleaflet-right">
+		<input type="button" id="Btn1" value="Export Table" onclick="https://walvis.carto.com/api/v2/sql?format=csv&q=SELECT%20*%20FROM%20mission_ks_parcels"/>
+	</div>
+  </div>
   <div id="dialog" title="Point Information">   
   <form>
     <fieldset>
