@@ -102,8 +102,8 @@
 				//dialog.dialog( "open" );
 				//if (layers.getLayers().length < 1) return;
 				//layers.eachLayer(function(layer) {
-				console.log("layer.cartodb_id= " + layer.cartodb_id);
-				console.log("layer.wm_status= " + layer.wm_status);
+				//console.log("layer.cartodb_id= " + layer.cartodb_id);
+				//console.log("layer.wm_status= " + layer.wm_status);
 				cartodb_ids.push(layer.cartodb_id);
 				wm_status2.push(layer.wm_status);
 				//});
@@ -201,10 +201,11 @@
   </head>
 
   <body onload="init()">
-  <div id='cartodb-map'></div>
-  <div id="ExportButton" >
-  <input type="button" id="Btn1" value="Export Table" onclick="location.href='https://walvis.carto.com/api/v2/sql?format=csv&q=SELECT%20*%20FROM%20mission_ks_parcels'"/>
-  </div>  
-  
+  <div id='container'>
+	<div id='cartodb-map'></div>
+	<div id="ExportButton" >
+		<input type="button" id="Btn1" value="Export Table" onclick="location.href='https://walvis.carto.com/api/v2/sql?format=csv&q=SELECT%20*%20FROM%20mission_ks_parcels'"/>
+	</div>  
+	</div>
   </body>
 </html>
