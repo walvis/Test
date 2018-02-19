@@ -124,6 +124,7 @@
 					dataType: 'json',
 					success: function(responseData, textStatus, jqXHR) {
 						console.log("Data saved");
+						map.closePopup();
 					},
 					error: function(responseData, textStatus, errorThrown) {
 						console.log("Problem saving the data");
