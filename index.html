@@ -29,7 +29,14 @@
         position: absolute;
         top: 160px;
         left: 10px;
-        z-index: 50;
+        z-index: 55;
+      }
+	#detailPane{
+        height:20px;
+        color:#570026;
+        font-size:12pt;
+        font-weight:600;
+        overflow:hidden;
       }
 	</style>
 
@@ -201,11 +208,13 @@
   </head>
 
   <body onload="init()">
-  <div id='container'>
-	<div id='cartodb-map'></div>
-	<div id="ExportButton" >
-		<input type="button" id="Btn1" value="Export Table" onclick="location.href='https://walvis.carto.com/api/v2/sql?format=csv&q=SELECT%20*%20FROM%20mission_ks_parcels'"/>
-	</div>  
-	</div>
+  <div id="detailPane">
+        Incline Village, NV - Unincorporated
+  </div>
+  <div id='cartodb-map'></div>
+  <div id="ExportButton" >
+  <input type="button" id="Btn1" value="Export Table" onclick="location.href='https://walvis.carto.com/api/v2/sql?format=csv&q=SELECT%20*%20FROM%20mission_ks_parcels'"/>
+  </div>  
+  
   </body>
 </html>
