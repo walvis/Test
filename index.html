@@ -66,12 +66,18 @@
 		var drawnItems = new L.FeatureGroup();
 		var geojsonMarkerOptions = {
 			radius: 5,
-			fillColor: "#7AB800",
+			fillColor: getColor(feature.properties.wm_status),
 			color: "#000",
 			weight: 1,
 			opacity: 1,
 			fillOpacity: 0.6
 		};
+		
+		//Get color based on wm-status
+		function getColor(s) {
+			return s = 'Active' ? '#7AB800' : '#800026';
+			}
+		
 		//Add data
 		var url = "https://walvis.carto.com/api/v2/sql?format=geojson&q=SELECT * FROM mission_ks_parcels";
 		$.getJSON(url, function(data) {
