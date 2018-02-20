@@ -25,6 +25,7 @@
 	<style>
     html, body {width:100%; height:100%; padding: 0; margin: 0; overflow:hidden;}
     #cartodb-map { width: 100%; 
+		height:100%; 
 		background: black;
 		overflow:hidden;
 	}
@@ -211,13 +212,14 @@
   </head>
 
   <body onload="init()">
+  
+  <div id="ExportButton" >
+  <input type="button" id="Btn1" value="Export Table" onclick="location.href='https://walvis.carto.com/api/v2/sql?format=csv&q=SELECT%20*%20FROM%20mission_ks_parcels'"/>
+  </div>
   <div id="detailPane">
         *Title*
   </div>
   <div id='cartodb-map'></div>
-  <div id="ExportButton" >
-  <input type="button" id="Btn1" value="Export Table" onclick="location.href='https://walvis.carto.com/api/v2/sql?format=csv&q=SELECT%20*%20FROM%20mission_ks_parcels'"/>
-  </div>  
   
   </body>
 </html>
