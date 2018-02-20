@@ -84,16 +84,20 @@
 			geojsonLayer = L.geoJson(data, {
 				pointToLayer: function (feature, latlng) {
 					var geojsonMarkerOptions = {
-						radius: 5,
+						radius: getRadius(feature.properties.wm_status),
 						fillColor: getColor(feature.properties.wm_status),
 						color: "#000",
 						weight: 1,
 						opacity: 1,
 						fillOpacity: 0.6
 					};
+					//get color for symbology
 					function getColor(s) {
 					//console.log("symbol= " + s);
 						return s ==="Active" ? '#7AB800' : '#FF0000';
+					}
+					function getRadius (r){
+						return r === "Active" ? 3 : 5;
 					}
 					console.log("fillColor= " + geojsonMarkerOptions.fillColor);
 					return new L.circleMarker(latlng, geojsonMarkerOptions);
