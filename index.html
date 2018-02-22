@@ -160,7 +160,7 @@
 			//Legend
 					
 			legend.onAdd = function (map) {
-				console.log("legend");
+				//console.log("legend");
 				var div = L.DomUtil.create('div', 'info legend'),
 					grades = ["Active", "Prospects"],
 					labels = ["#7AB800", "#FF0000"];
@@ -175,6 +175,8 @@
 			};
 			
 			legend.addTo(map);
+			
+			//Update database function
 						
 			function updateCartoDB(layer) {
 				var cartodb_ids = [];
@@ -270,6 +272,8 @@
 			minLength: 2
 		}) );
 	//End Search
+	
+	//Locate
 	L.control.locate().addTo(map);
 
     }
