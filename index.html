@@ -74,7 +74,7 @@
     <title>Test</title>
 	<script>
     var map;
-	var legend = L.control({position: 'bottomright'})
+	var legend = L.control({position: 'topright'})
     function init(){
       // initiate leaflet map
       map = new L.Map('cartodb-map', { 
@@ -180,12 +180,6 @@
 				var cartodb_ids = [];
 				//var geojsons = [];
 				var wm_status2 = [];
-				//console.log("layers.wm_status = " + layers.wm_status );
-				//dialog.dialog( "open" );
-				//if (layers.getLayers().length < 1) return;
-				//layers.eachLayer(function(layer) {
-				//console.log("layer.cartodb_id= " + layer.cartodb_id);
-				//console.log("layer.wm_status= " + layer.wm_status);
 				cartodb_ids.push(layer.cartodb_id);
 				wm_status2.push(layer.wm_status);
 				//});
