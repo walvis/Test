@@ -159,7 +159,7 @@
 			
 			legend.onAdd = function (map) {
 				var div = L.DomUtil.create('div', 'info legend'),
-					grades = [something, something],
+					grades = ['Active', 'Prospects'],
 					labels = [],
 					from, to;
 				for (var i = 0; i <grades.length; i++) {
@@ -173,9 +173,6 @@
 			};
 			
 			legend.addTo(map)
-			
-			
-			
 			
 			function updateCartoDB(layer) {
 				var cartodb_ids = [];
