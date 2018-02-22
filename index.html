@@ -128,26 +128,6 @@
 					//console.log("fillColor= " + geojsonMarkerOptions.fillColor);
 					return new L.circleMarker(latlng, geojsonMarkerOptions);
 					
-					
-			//Legend
-					
-			legend.onAdd = function (map) {
-				console.log("legend");
-				var div = L.DomUtil.create('div', 'info legend'),
-					grades = ['Active', 'Prospects'],
-					labels = [];
-					
-				for (var i = 0; i <grades.length; i++) {
-				//console.log("dsjdvsjb = " + i);
-					from = grades[i];
-					to = grades [i + 1];
-					labels.push(
-						'<i style="background: ' + getColor(from + 1) + '"></i> ' + from + (to ? '&ndash;' + to : '+'));
-					}
-				div.innerHTML = labels.join('<br>');
-				return div;
-			};
-			
 			
 				},
 				onEachFeature: function(feature, layer) {
@@ -177,6 +157,25 @@
 			});
 			
 			map.addLayer(drawnItems);
+			//Legend
+					
+			legend.onAdd = function (map) {
+				console.log("legend");
+				var div = L.DomUtil.create('div', 'info legend'),
+					grades = ["Active", "Prospects"],
+					labels = ["Dog", "cat"];
+					
+				for (var i = 0; i <grades.length; i++) {
+				//console.log("dsjdvsjb = " + i);
+					from = grades[i];
+					to = grades [i + 1];
+					labels.push(
+						'<i style="background: '#7AB800' "></i> ' + from + (to ? '&ndash;' + to : '+'));
+					}
+				div.innerHTML = labels.join('<br>');
+				return div;
+			};
+			
 			legend.addTo(map);
 						
 			function updateCartoDB(layer) {
