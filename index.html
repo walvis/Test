@@ -74,6 +74,7 @@
     <title>Test</title>
 	<script>
     var map;
+	var legend = L.control({position: 'bottomright'})
     function init(){
       // initiate leaflet map
       map = new L.Map('cartodb-map', { 
@@ -103,7 +104,7 @@
 		
 		//Add data
 		var url = "https://walvis.carto.com/api/v2/sql?format=geojson&q=SELECT * FROM mission_ks_parcels";
-		var legend = L.control({position: 'bottomright'})
+		
 		$.getJSON(url, function(data) {
 			geojsonLayer = L.geoJson(data, {
 				pointToLayer: function (feature, latlng) {
