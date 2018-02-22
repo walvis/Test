@@ -103,6 +103,7 @@
 		
 		//Add data
 		var url = "https://walvis.carto.com/api/v2/sql?format=geojson&q=SELECT * FROM mission_ks_parcels";
+		var legend = L.control({position: 'bottomright'})
 		$.getJSON(url, function(data) {
 			geojsonLayer = L.geoJson(data, {
 				pointToLayer: function (feature, latlng) {
@@ -125,6 +126,26 @@
 					}
 					//console.log("fillColor= " + geojsonMarkerOptions.fillColor);
 					return new L.circleMarker(latlng, geojsonMarkerOptions);
+					
+					
+			//Legend
+					
+			legend.onAdd = function (map) {
+				var div = L.DomUtil.create('div', 'info legend'),
+					grades = ['Active', 'Prospects'],
+					labels = [],
+					from, to;
+				for (var i = 0; i <grades.length; i++) {
+					from = grades[i];
+					to = grades [i + 1];
+					labels.push(
+						'i style="background: ' + getColor(from + 1) + '"></i> ' + from + (to ? '&ndash;' + to : '+'));
+					}
+				div.innerHTML = labels.join('<br>');
+				return div;
+			};
+			
+			
 				},
 				onEachFeature: function(feature, layer) {
 					var input = L.DomUtil.create('input', 'my-input'); 
@@ -153,27 +174,8 @@
 			});
 			
 			map.addLayer(drawnItems);
-			
-			//Legend
-			var legend = L.control({position: 'bottomright'})
-			
-			legend.onAdd = function (map) {
-				var div = L.DomUtil.create('div', 'info legend'),
-					grades = ['Active', 'Prospects'],
-					labels = [],
-					from, to;
-				for (var i = 0; i <grades.length; i++) {
-					from = grades[i];
-					to = grades [i + 1];
-					labels.push(
-						'i style="background: ' + getColor(from + 1) + '"></i> ' + from + (to ? '&ndash;' + to : '+'));
-					}
-				div.innerHTML = labels.join('<br>');
-				return div;
-			};
-			
 			legend.addTo(map)
-			
+						
 			function updateCartoDB(layer) {
 				var cartodb_ids = [];
 				//var geojsons = [];
