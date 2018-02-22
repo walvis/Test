@@ -46,6 +46,29 @@
         font-weight:600;
 		position: static;
     }
+	.info {
+		padding: 6px 8px;
+		font: 14px/16px Arial, Helvetica, sans-serif;
+		background: white;
+		background: rgba(255,255,255,0.8);
+		box-shadow: 0 0 15px rgba(0,0,0,0.2);
+		border-radius: 5px;
+	}
+	.info h4 {
+		margin: 0 0 5px;
+		color: #777;
+	}
+	.legend {
+		line-height: 18px;
+		color: #555;
+	}
+	.legend i {
+		width: 18px;
+		height: 18px;
+		float: left;
+		margin-right: 8px;
+		opacity: 0.7;
+	}
 	</style>
 
     <title>Test</title>
@@ -96,6 +119,7 @@
 					//console.log("symbol= " + s);
 						return s ==="Active" ? '#7AB800' : '#FF0000';
 					}
+					//set radius for symbology
 					function getRadius (r){
 						return r === "Active" ? 3 : 5;
 					}
@@ -129,6 +153,27 @@
 			});
 			
 			map.addLayer(drawnItems);
+			
+			//Legend
+			var legend = L.control({position: 'bottomright'})
+			
+			legend.onAdd = function (map) {
+				var div = L.DomUtil.create('div', 'info legend'),
+					grades = [something, something],
+					labels = [],
+					from, to;
+				for (var i = 0; i <grades.length; i++) {
+					from = grades[i];
+					to = grades [i + 1];
+					labels.push(
+						'i style="background: ' + getColor(from + 1) + '"></i> ' + from + (to ? '&ndash;' + to : '+'));
+					}
+				div.innerHTML = labels.join('<br>');
+				return div;
+			};
+			
+			legend.addTo(map)
+			
 			
 			
 			
