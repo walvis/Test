@@ -132,12 +132,13 @@
 			//Legend
 					
 			legend.onAdd = function (map) {
+				console.log("legend");
 				var div = L.DomUtil.create('div', 'info legend'),
 					grades = ['Active', 'Prospects'],
 					labels = [],
 					from, to;
 				for (var i = 0; i <grades.length; i++) {
-				console.log("dsjdvsjb = " + i);
+				//console.log("dsjdvsjb = " + i);
 					from = grades[i];
 					to = grades [i + 1];
 					labels.push(
