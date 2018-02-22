@@ -170,7 +170,7 @@
 					from = grades[i];
 					to = grades [i + 1];
 					labels.push(
-						'<i style="background: '#7AB800' "></i> ' + from + (to ? '&ndash;' + to : '+'));
+						'<i style="background: ' + '#7AB800' + '"></i> ' + from + (to ? '&ndash;' + to : '+'));
 					}
 				div.innerHTML = labels.join('<br>');
 				return div;
