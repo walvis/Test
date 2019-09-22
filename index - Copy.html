@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Test : testing">
+
+    <link rel="stylesheet" href="https://cartodb-libs.global.ssl.fastly.net/cartodb.js/v3/3.15/themes/css/cartodb.css" />
+	<link rel="stylesheet" href="javascripts/leaflet-search.css" />
+	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.3.2/leaflet.draw.css" />
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css" >
+	<link rel="stylesheet" href="stylesheets/L.Control.Locate.min.css" />
+	<script src="https://cartodb-libs.global.ssl.fastly.net/cartodb.js/v3/3.15/cartodb.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.3.2/leaflet.draw.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8R88QEi9kUJS4dBThpgNkplhJDXMV518&v=3&libraries=places&sensor=false"></script>
+	<script src="javascripts/leaflet-search.js"></script>
+	<script src="javascripts/L.Control.Locate.js" ></script>
+	<!--[if lte IE 8]>
+    <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v2/themes/css/cartodb.ie.css" />
+	<![endif]-->
+	<style>
+    html, body {width:100%; height:100%; padding: 0; margin: 0;}
+    #cartodb-map { width: 100%; height:100%; background: black;}
+	</style>
+
+    <title>Test</title>
+	<script>
+    var map;
+    function init(){
+      // initiate leaflet map
+      map = new L.Map('cartodb-map', { 
+        center: [39.026,-94.64],
+        zoom: 14
+      })
+	  	  
+	   L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      }).addTo(map);
+	  
+	  //var layerUrl = 'https://walvis.carto.com/api/v2/viz/47b29da2-62ee-11e6-ad18-0ee66e2c9693/viz.json';
+	  
+	  //cartodb.createLayer(map, layerUrl)
+	  //	.addTo(map)
+	  //	.on('done', function(layer) {
+	  //}).on('error', function() {
+	  //log the error
+	  //});
+	  
+	  // Initialise the FeatureGroup to store editable layers
+		var drawnItems = new L.FeatureGroup();
+		var geojsonMarkerOptions = {
+			radius: 5,
+			fillColor: "#7AB800",
+			color: "#000",
+			weight: 1,
+			opacity: 1,
+			fillOpacity: 0.6
+		};
+		//Add previous data
+		var url = "https://walvis.carto.com/api/v2/sql?format=geojson&q=SELECT * FROM mission_ks_parcels";
+		$.getJSON(url, function(data) {
+			geojsonLayer = L.geoJson(data, {
+				pointToLayer: function (feature, latlng) {
+					return new L.circleMarker(latlng, geojsonMarkerOptions);
+				},
+				onEachFeature: function(feature, layer) {
+					var input = L.DomUtil.create('input', 'my-input'); 
+					//input.value = feature.properties.wm_status;
+					var inputHTML = '<input type="text" name="input" class="my-input" value= ""/>';
+					input.value = feature.properties.status;					
+					L.DomEvent.addListener(input, 'change', function () {
+						//feature.properties.wm_status = input.value;
+						feature.properties.status = input.value;
+						//console.log("change status= " + feature.properties.wm_status);
+						console.log("change status= " + feature.properties.status);
+						//input.value = feature.properties.status
+						//layer.wm_status = feature.properties.wm_status
+						layer.status = feature.properties.status;
+						console.log("layer.status= " + layer.status);
+						updateCartoDB(layer);
+					});
+					layer.cartodb_id = feature.properties.cartodb_id;
+					//layer.wm_status = feature.properties.wm_status;
+					//layer.status = feature.properties.std_addr;
+					//layer.bindPopup(feature.properties.std_addr + "<BR/>" + feature.properties.wm_status);
+					var popupContent = document.createElement('div');
+					popupContent.innerHTML = "Address: " + feature.properties.std_addr + "<BR/>" + "City: " + feature.properties.std_city + "<BR/>" + "Zip: " + feature.properties.std_zip + "<BR/>" + "Status: ";
+					popupContent.appendChild(input);
+					layer.bindPopup(popupContent);
+					//layer.bindPopup("Address: " + feature.properties.std_addr + "<BR/>" + "Status: " + feature.properties.status + "<BR/>" + input);
+					drawnItems.addLayer(layer);
+				}
+				
+			});
+			
+			map.addLayer(drawnItems);
+			
+			// Initialise the draw control and pass it the FeatureGroup of editable layers
+			var drawControl = new L.Control.Draw({
+				edit: {
+					featureGroup: drawnItems
+				}
+			});
+
+			map.addControl(drawControl);
+			var lc = L.control.locate({
+			position: 'topright',
+			strings: {
+			title: "Show me where I am, yo!"
+					}
+			}).addTo(map);
+			
+			//SQL insert.update.delete
+			
+			map.on('draw:created', function(e) {
+				drawnItems.addLayer(e.layer);
+				persistOnCartoDB("INSERT", e.layer);
+			});
+			map.on('draw:edited', function(e) {
+				//dialog.dialog( "open" );
+				console.log("Figuring out what 'e' is = " + e.layers);
+				persistOnCartoDB("UPDATE", e.layers);
+			});
+			map.on('draw:deleted', function(e) {
+				persistOnCartoDB("DELETE", e.layers);
+			});
+			
+			function updateCartoDB(layer) {
+				var cartodb_ids = [];
+				//var geojsons = [];
+				var wm_status2 = [];
+				//console.log("layers.wm_status = " + layers.wm_status );
+				//dialog.dialog( "open" );
+				//if (layers.getLayers().length < 1) return;
+				//layers.eachLayer(function(layer) {
+				console.log("layer.cartodb_id= " + layer.cartodb_id);
+				console.log("layer.status= " + layer.status);
+				cartodb_ids.push(layer.cartodb_id);
+				wm_status2.push(layer.status);
+				//});
+						
+				var sql = "SELECT walvis_upsert_mission4(ARRAY[";
+				sql += cartodb_ids.join(",");
+				sql += "],ARRAY[";
+				sql += wm_status2.join(",");
+				sql += "]);";
+				console.log("persisting... https://walvis.carto.com/api/v2/sql?q=" + sql);
+				$.ajax({
+					type: 'POST',
+					url: 'https://walvis.carto.com/api/v2/sql',
+					crossDomain: true,
+					data: {
+						"q": sql
+					},
+					dataType: 'json',
+					success: function(responseData, textStatus, jqXHR) {
+						console.log("Data saved");
+					},
+					error: function(responseData, textStatus, errorThrown) {
+						console.log("Problem saving the data");
+						console.log(sql);
+						console.log(responseData);
+						console.log(textStatus);
+						console.log(errorThrown);
+					}
+				});
+			}
+			
+			function persistOnCartoDB(action, layers) {
+				var cartodb_ids = [];
+				var geojsons = [];
+				var wm_status2 = [];
+				console.log("sql action= " + action);
+				//console.log("layers.wm_status = " + layers.wm_status );
+				switch (action) {
+					case "UPDATE":
+						//dialog.dialog( "open" );
+						//if (layers.getLayers().length < 1) return;
+						layers.eachLayer(function(layer) {
+							console.log("layer.cartodb_id= " + layer.cartodb_id);
+							console.log("layer.wm_status= " + layer.wm_status);
+							console.log("layer.status= " + layer.status);
+							cartodb_ids.push(layer.cartodb_id);
+							//geojsons.push("'" + JSON.stringify(layer.toGeoJSON().geometry) + "'");
+							//wm_status2.push("'" + layer.wm_status + "'");
+							wm_status2.push(layer.status);
+							
+						});
+						break;
+					case "INSERT":
+						//dialog.dialog( "open" );
+						cartodb_ids.push(-1);
+						geojsons.push("'" + JSON.stringify(layers.toGeoJSON().geometry) + "'");
+						//wm_status2.push(layers.wm_status);
+						wm_status2.push(layers.status);
+						//console.log("layer.wm_status= " + layers.wm_status)
+						console.log("layer.status= " + layers.status)
+						break;
+					case "DELETE":
+						layers.eachLayer(function(layer) {
+							cartodb_ids.push(layer.cartodb_id);
+							geojsons.push("''");
+							wm_status2.push("''");
+						});
+						break;
+				}
+				var sql = "SELECT walvis_upsert_mission4(ARRAY[";
+				sql += cartodb_ids.join(",");
+				sql += "],ARRAY[";
+				sql += wm_status2.join(",");
+				sql += "]);";
+				console.log("persisting... https://walvis.carto.com/api/v2/sql?q=" + sql);
+				$.ajax({
+					type: 'POST',
+					url: 'https://walvis.carto.com/api/v2/sql',
+					crossDomain: true,
+					data: {
+						"q": sql
+					},
+					dataType: 'json',
+					success: function(responseData, textStatus, jqXHR) {
+						console.log("Data saved");
+						if (action == "INSERT")
+							layers.cartodb_id = responseData.rows[0].cartodb_id;
+					},
+					error: function(responseData, textStatus, errorThrown) {
+						console.log("Problem saving the data");
+						console.log(sql);
+						console.log(responseData);
+						console.log(textStatus);
+						console.log(errorThrown);
+					}
+				});
+			}			
+		});
+	 
+	  // Use the jQuery UI dialog to create a dialog and set options
+			var dialog = $("#dialog").dialog({
+				autoOpen: false,
+				height: 300,
+				width: 350,
+				modal: true,
+			position: {
+				my: "center center",
+				at: "center center",
+				of: "#cartodb-map"
+			},
+			buttons: {
+			Cancel: function() {
+				dialog.dialog("close");
+				//map.removeLayer(drawnItems);
+				}
+			},
+			close: function() {
+				form[ 0 ].reset();
+				console.log("Dialog closed");
+				}
+			});
+	 // Stops default form submission and ensures that setData or the cancel function run
+			var form = dialog.find("form").on("submit", function(event) {
+				event.preventDefault();
+			});
+	 
+	 //Search
+	 var geocoder = new google.maps.Geocoder();
+	 function googleGeocoding(text, callResponse)
+	{
+		geocoder.geocode({address: text}, callResponse);
+	}
+	function formatJSON(rawjson)
+	{
+		var json = {},
+			key, loc, disp = [];
+		for(var i in rawjson)
+		{
+			key = rawjson[i].formatted_address;
+			loc = L.latLng( rawjson[i].geometry.location.lat(), rawjson[i].geometry.location.lng() );
+			json[ key ]= loc;	//key,value format
+		}
+		return json;
+	}
+	
+	map.addControl( new L.Control.Search({
+			sourceData: googleGeocoding,
+			formatData: formatJSON,
+			markerLocation: true,
+			autoType: true,
+			autoCollapse: true,
+			minLength: 2
+		}) );
+	//End Search
+	
+
+    }
+  </script>
+  </head>
+
+  <body onload="init()">
+  <div id='cartodb-map'></div>
+  <div id="dialog" title="Point Information">   
+  <form>
+    <fieldset>
+      <label for="username">Your Name</label>
+      <input type="text" name="username" id="username" placeholder="Enter your Name" class="text ui-widget-content ui-corner-all">
+      <label for="description">About this Point</label>
+      <input type="text" name="description" id="description" placeholder="Description for this point" class="text ui-widget-content ui-corner-all">
+      <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+    </fieldset>
+  </form>
+</div>
+  </body>
+</html>

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Test : testing">
+
+    <link rel="stylesheet" href="https://cartodb-libs.global.ssl.fastly.net/cartodb.js/v3/3.15/themes/css/cartodb.css" />
+	<link rel="stylesheet" href="javascripts/leaflet-search.css" />
+	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.3.2/leaflet.draw.css" />
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css" >
+	<link rel="stylesheet" href="stylesheets/L.Control.Locate.min.css" />
+	<script src="https://cartodb-libs.global.ssl.fastly.net/cartodb.js/v3/3.15/cartodb.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.3.2/leaflet.draw.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8R88QEi9kUJS4dBThpgNkplhJDXMV518&v=3&libraries=places&sensor=false"></script>
+	<script src="javascripts/leaflet-search.js"></script>
+	<script src="javascripts/L.Control.Locate.js" ></script>
+	<!--[if lte IE 8]>
+    <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v2/themes/css/cartodb.ie.css" />
+	<![endif]-->
+	<style>
+    html, body {width:100%; height:100%; padding: 0; margin: 0; overflow:hidden;}
+	#container {
+		width: 100%; 
+		height:100%; 
+		}
+    #cartodb-map { 
+		
+		height:97%; 
+		background: black;
+	}
+	#ExportButton {
+        position: absolute;
+        top: 170px;
+        left: 10px;
+        z-index: 55;
+    }
+	#detailPane{
+        height:25px;
+        color:#570026;
+        font-size:12pt;
+        font-weight:600;
+		position: static;
+    }
+	.info {
+		padding: 6px 8px;
+		font: 14px/16px Arial, Helvetica, sans-serif;
+		background: white;
+		background: rgba(255,255,255,0.8);
+		box-shadow: 0 0 15px rgba(0,0,0,0.2);
+		border-radius: 5px;
+	}
+	.info h4 {
+		margin: 0 0 5px;
+		color: #777;
+	}
+	.legend {
+		line-height: 18px;
+		color: #555;
+	}
+	.legend i {
+		width: 18px;
+		height: 18px;
+		float: left;
+		margin-right: 8px;
+		opacity: 0.7;
+	}
+	</style>
+
+    <title>Test</title>
+	<script>
+    var map;
+	var legend = L.control({position: 'topright'})
+    function init(){
+      // initiate leaflet map
+      map = new L.Map('cartodb-map', { 
+        center: [39.024,-94.658],
+        zoom: 15
+      })
+	  	  
+	   L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      }).addTo(map);
+	  
+	   // Initialize the FeatureGroup to store editable layers
+		var drawnItems = new L.FeatureGroup();
+		<!-- var geojsonMarkerOptions = { -->
+			<!-- radius: 5, -->
+			<!-- fillColor: getColor(feature.properties.wm_status), -->
+			<!-- color: "#000", -->
+			<!-- weight: 1, -->
+			<!-- opacity: 1, -->
+			<!-- fillOpacity: 0.6 -->
+		<!-- }; -->
+		
+		<!-- //Get color based on wm-status -->
+		<!-- function getColor(s) { -->
+			<!-- return s = 'Active' ? '#7AB800' : '#800026'; -->
+			<!-- } -->
+		
+		//Add data
+		var url = "https://walvis.carto.com/api/v2/sql?format=geojson&q=SELECT * FROM mission_ks_parcels";
+		
+		$.getJSON(url, function(data) {
+			geojsonLayer = L.geoJson(data, {
+				pointToLayer: function (feature, latlng) {
+					var geojsonMarkerOptions = {
+						radius: getRadius(feature.properties.wm_status),
+						fillColor: getColor(feature.properties.wm_status),
+						color: "#000",
+						weight: .5,
+						opacity: 1,
+						fillOpacity: 0.6
+					};
+					//get color for symbology
+					function getColor(s) {
+					//console.log("symbol= " + s);
+						return s ==="Active" ? '#7AB800' : '#FF0000';
+					}
+					//set radius for symbology
+					function getRadius (r){
+						return r === "Active" ? 3 : 5;
+					}
+					//console.log("fillColor= " + geojsonMarkerOptions.fillColor);
+					return new L.circleMarker(latlng, geojsonMarkerOptions);
+					
+			
+				},
+				onEachFeature: function(feature, layer) {
+					var input = L.DomUtil.create('input', 'my-input'); 
+					input.value = feature.properties.wm_status;
+					var inputHTML = '<input type="text" name="input" class="my-input" value= ""/>';
+					//input.value = feature.properties.status;					
+					L.DomEvent.addListener(input, 'change', function () {
+						feature.properties.wm_status = input.value;
+						//feature.properties.status = input.value;
+						console.log("change status= " + feature.properties.wm_status);
+						//console.log("change status= " + feature.properties.status);
+						//input.value = feature.properties.status
+						layer.wm_status = feature.properties.wm_status
+						//layer.status = feature.properties.status;
+						console.log("layer.wm_status= " + layer.wm_status);
+						updateCartoDB(layer);
+					});
+					layer.cartodb_id = feature.properties.cartodb_id;
+					var popupContent = document.createElement('div');
+					popupContent.innerHTML = "<b>Address:</b> " + feature.properties.std_addr + "<BR/>" + "<b>City:</b> " + feature.properties.std_city + "<BR/>" + "<b>Zip:</b> " + feature.properties.std_zip + "<BR/>" + "<b>Status:</b> ";
+					popupContent.appendChild(input);
+					layer.bindPopup(popupContent);
+					drawnItems.addLayer(layer);
+				}
+				
+			});
+			
+			map.addLayer(drawnItems);
+			//Legend
+					
+			legend.onAdd = function (map) {
+				//console.log("legend");
+				var div = L.DomUtil.create('div', 'info legend'),
+					grades = ["Active", "Prospects"],
+					labels = ["#7AB800", "#FF0000"];
+					
+				for (var i = 0; i <grades.length; i++) {
+					div.innerHTML += grades[i] + ('<i style="background: ' + labels[i] + '"></i> ') + '<br>';
+					//labels.push(
+					//	'<i style="background: ' + '#7AB800' + '"></i> ' + from + (to ? '&ndash;' + to : '+'));
+					}
+				//div.innerHTML = labels.join('<br>');
+				return div;
+			};
+			
+			legend.addTo(map);
+			
+			//Update database function
+						
+			function updateCartoDB(layer) {
+				var cartodb_ids = [];
+				//var geojsons = [];
+				var wm_status2 = [];
+				cartodb_ids.push(layer.cartodb_id);
+				wm_status2.push(layer.wm_status);
+				//});
+						
+				var sql = "SELECT walvis_upsert_mission5(ARRAY[";
+				sql += cartodb_ids.join(",");
+				sql += "],ARRAY['";
+				sql += wm_status2.join(",");
+				sql += "']);";
+				console.log("persisting... https://walvis.carto.com/api/v2/sql?q=" + sql);
+				$.ajax({
+					type: 'POST',
+					url: 'https://walvis.carto.com/api/v2/sql',
+					crossDomain: true,
+					data: {
+						"q": sql
+					},
+					dataType: 'json',
+					success: function(responseData, textStatus, jqXHR) {
+						console.log("Data saved");
+						map.closePopup();
+					},
+					error: function(responseData, textStatus, errorThrown) {
+						console.log("Problem saving the data");
+						console.log(sql);
+						console.log(responseData);
+						console.log(textStatus);
+						console.log(errorThrown);
+					}
+				});
+			}
+			
+			
+		});
+	 
+	  // Use the jQuery UI dialog to create a dialog and set options
+			var dialog = $("#dialog").dialog({
+				autoOpen: false,
+				height: 300,
+				width: 350,
+				modal: true,
+			position: {
+				my: "center center",
+				at: "center center",
+				of: "#cartodb-map"
+			},
+			buttons: {
+			Cancel: function() {
+				dialog.dialog("close");
+				//map.removeLayer(drawnItems);
+				}
+			},
+			close: function() {
+				form[ 0 ].reset();
+				console.log("Dialog closed");
+				}
+			});
+	 // Stops default form submission and ensures that setData or the cancel function run
+			var form = dialog.find("form").on("submit", function(event) {
+				event.preventDefault();
+			});
+	 
+	 //Search
+	 var geocoder = new google.maps.Geocoder();
+	 function googleGeocoding(text, callResponse)
+	{
+		geocoder.geocode({address: text}, callResponse);
+	}
+	function formatJSON(rawjson)
+	{
+		var json = {},
+			key, loc, disp = [];
+		for(var i in rawjson)
+		{
+			key = rawjson[i].formatted_address;
+			loc = L.latLng( rawjson[i].geometry.location.lat(), rawjson[i].geometry.location.lng() );
+			json[ key ]= loc;	//key,value format
+		}
+		return json;
+	}
+	
+	map.addControl( new L.Control.Search({
+			sourceData: googleGeocoding,
+			formatData: formatJSON,
+			markerLocation: true,
+			autoType: true,
+			autoCollapse: true,
+			minLength: 2
+		}) );
+	//End Search
+	
+	//Locate
+	L.control.locate().addTo(map);
+
+    }
+  </script>
+  </head>
+
+  <body onload="init()">
+  
+  <div id="ExportButton" >
+	<input type="button" id="Btn1" value="Export Table" onclick="location.href='https://walvis.carto.com/api/v2/sql?format=csv&q=SELECT%20*%20FROM%20mission_ks_parcels'"/>
+  </div>
+  <div id="container">
+	  <div id="detailPane">
+			*Title sdjfbsdonfsldoenfsoif*
+	  </div>
+	  <div id="cartodb-map"></div>
+  </div>
+  </body>
+</html>
